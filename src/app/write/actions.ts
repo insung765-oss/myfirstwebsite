@@ -1,4 +1,3 @@
-'''
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -62,5 +61,3 @@ export async function addPost(formData: FormData) {
   revalidatePath('/');
   redirect('/?post_success=true');
 }
-
-'''
