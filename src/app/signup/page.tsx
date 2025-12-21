@@ -40,8 +40,11 @@ export default function SignupPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="bg-white w-full max-w-sm p-8 rounded-2xl shadow-lg border border-gray-100">
-        <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">회원가입 👋</h1>
-        <p className="text-center text-gray-400 text-sm mb-8">이름과 비밀번호만 있으면 돼요</p>
+        <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">회원가입</h1>
+        <div className="mt-4 mb-4 text-center text-xs text-gray-500">
+          <p>‼️평소에 사용하시는 비밀번호는 가급적 쓰지 말아주세요‼️</p>
+          <p>보안 모듈 만드려다가 멘탈 터져서 부득이하게 주인장이 여러분의 소중한 비번을 열람 가능한 구조가 됐습니다..</p>
+        </div>
         
         <form onSubmit={handleSignup} className="space-y-4">
           <div>

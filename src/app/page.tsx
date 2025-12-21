@@ -26,7 +26,7 @@ export default function LandingPage() {
           href="/digging" 
           icon={<Disc size={24} />} 
           title="Digging" 
-          subtitle="노래 추천 및 플레이리스트 추가"
+          subtitle="노래 추천"
           color="indigo"
         />
         
