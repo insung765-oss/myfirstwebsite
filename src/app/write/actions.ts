@@ -3,10 +3,10 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { addTrackToPlaylist } from '@/lib/spotify';
-import { createClient } from '@/lib/supabase/server'; // Use the new helper to create the client
+import { createClient } from '@/lib/supabase/server';
 
 export async function addPost(formData: FormData) {
-  const supabase = createClient(); // This now creates a configured Supabase client
+  const supabase = createClient();
 
   const {
     data: { session },
