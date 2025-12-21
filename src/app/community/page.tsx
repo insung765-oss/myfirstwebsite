@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { PlusCircle, MessageSquare, ThumbsUp, Image as ImageIcon } from "lucide-react";
+import { ThumbsUp, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { formatDate } from "@/utils/date";
+import Header from "@/components/Header";
 
 export const revalidate = 0;
 
@@ -15,17 +17,7 @@ export default async function CommunityPage() {
 
   return (
     <main className="max-w-xl mx-auto min-h-screen bg-gray-50 pb-20">
-      {/* 헤더 */}
-      <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 p-4 flex justify-between items-center z-10">
-        <h1 className="font-bold text-lg text-gray-800">커뮤니티 💬</h1>
-        <Link href="/community/write">
-          <button className="bg-purple-600 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 hover:bg-purple-700 transition shadow-md">
-            <PlusCircle size={16} />
-            글쓰기
-          </button>
-        </Link>
-      </header>
-
+      <Header />
       {/* 게시글 리스트 */}
       <div className="p-4 space-y-4">
         {displayPosts.length === 0 ? (
@@ -37,34 +29,44 @@ export default async function CommunityPage() {
           displayPosts.map((post) => (
             <Link href={`/community/${post.id}`} key={post.id} className="block">
               <article className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition cursor-pointer">
-                <div className="flex justify-between items-start mb-2">
-                  <h2 className="text-lg font-bold text-gray-900 line-clamp-1">{post.title}</h2>
-                  <span className="text-xs text-gray-400 whitespace-nowrap">
-                    {new Date(post.created_at).toLocaleDateString()}
+                {/* 상단 정보: 제목, 작성일 */}
+                <div className="flex justify-between items-start mb-3">
+                  <h2 className="text-lg font-bold text-gray-900 line-clamp-2 flex-1 break-all">{post.title}</h2>
+                  <span className="text-xs text-gray-400 whitespace-nowrap ml-4">
+                    {formatDate(post.created_at)}
                   </span>
                 </div>
                 
-                <p className="text-gray-600 text-sm line-clamp-2 mb-4 leading-relaxed">
+                {/* 본문 내용 */}
+                <p className="text-gray-600 text-sm line-clamp-3 mb-4 leading-relaxed">
                   {post.content}
                 </p>
 
-                {/* 하단 정보 (작성자, 이미지 유무, 추천 수) */}
-                <div className="flex items-center justify-between text-xs text-gray-500 border-t border-gray-50 pt-3">
+                {/* 이미지 썸네일 */}
+                {post.images && post.images.length > 0 && (
+                  <div className="mt-4 mb-4 relative">
+                    <img 
+                      src={post.images[0]} 
+                      alt={`${post.title} 썸네일`} 
+                      className="w-full h-48 object-cover rounded-lg bg-gray-100"
+                    />
+                    <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                      <ImageIcon size={14} />
+                      <span>{post.images.length}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* 하단 정보: 작성자, 추천 수 */}
+                <div className="flex items-center justify-between text-xs text-gray-500 border-t border-gray-100 pt-3">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-gray-700">{post.user_name}</span>
                   </div>
 
                   <div className="flex items-center gap-4">
-                    {/* 이미지가 있으면 아이콘 표시 */}
-                    {post.images && post.images.length > 0 && (
-                      <div className="flex items-center gap-1 text-purple-500">
-                        <ImageIcon size={14} />
-                        <span>{post.images.length}</span>
-                      </div>
-                    )}
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 text-red-500">
                       <ThumbsUp size={14} />
-                      {post.upvotes}
+                      <span className="font-semibold">{post.upvotes}</span>
                     </div>
                   </div>
                 </div>

@@ -40,7 +40,7 @@ export default function SignupPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="bg-white w-full max-w-sm p-8 rounded-2xl shadow-lg border border-gray-100">
-        <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">새로운 멤버 등록 👋</h1>
+        <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">회원가입 👋</h1>
         <p className="text-center text-gray-400 text-sm mb-8">이름과 비밀번호만 있으면 돼요</p>
         
         <form onSubmit={handleSignup} className="space-y-4">
@@ -50,7 +50,7 @@ export default function SignupPage() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="예: 지수"
+              placeholder=""
               className="w-full border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
@@ -61,18 +61,18 @@ export default function SignupPage() {
               value={pin}
               onChange={(e) => setPin(e.target.value)}
               maxLength={4}
-              placeholder="0000"
+              placeholder=""
               className="w-full border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-indigo-500 tracking-widest text-center text-lg"
             />
           </div>
           <button className="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition mt-2">
-            가입 완료
+            회원가입
           </button>
         </form>
 
          <div className="mt-6 text-center">
           <Link href="/" className="text-sm text-gray-500 hover:text-gray-800 underline">
-            메인으로 돌아가기
+            메인으로
           </Link>
         </div>
       </div>

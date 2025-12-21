@@ -14,7 +14,7 @@ export default function CommunityWritePage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState<string[]>([]);
-  const [isUploading, setIsUploading] = useState(false); // 업로드 중 표시
+  const [isUploading, setIsUploading] = useState(false);
 
   // 1. 이미지 파일 선택 및 업로드 핸들러
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +57,6 @@ export default function CommunityWritePage() {
   };
 
   const handleSubmit = async () => {
-    if (!user) return alert("로그인이 필요합니다!");
     if (!title.trim() || !content.trim()) return alert("제목과 내용을 입력해주세요.");
 
     const { error } = await supabase.from("community_posts").insert({

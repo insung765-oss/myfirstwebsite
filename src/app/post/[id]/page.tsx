@@ -3,6 +3,7 @@ import { ArrowLeft, User } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import CommentSection from "@/components/CommentSection";
 import StarRating from "@/components/StarRating";
+import { formatDate } from "@/utils/date";
 
 export const revalidate = 0;
 
@@ -27,7 +28,7 @@ export default async function PostDetail({ params }: { params: Promise<{ id: str
   return (
     <main className="max-w-xl mx-auto min-h-screen bg-white pb-20">
       <header className="p-4 flex items-center gap-4 sticky top-0 bg-white/90 backdrop-blur-sm z-10">
-        <Link href="/" className="text-gray-600 hover:text-black transition">
+        <Link href="/digging" className="text-gray-600 hover:text-black transition">
           <ArrowLeft size={24} />
         </Link>
         <h1 className="font-bold text-lg truncate flex-1">{post.title}</h1>
@@ -62,9 +63,12 @@ export default async function PostDetail({ params }: { params: Promise<{ id: str
         </section>
 
         <section className="bg-indigo-50 p-6 rounded-2xl mb-8 relative overflow-hidden">
-          <div className="flex items-center gap-2 mb-3">
-             <User size={16} className="text-indigo-600"/>
-             <span className="font-bold text-indigo-900">{post.user_name}</span>
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex items-center gap-2">
+              <User size={16} className="text-indigo-600"/>
+              <span className="font-bold text-indigo-900">{post.user_name}</span>
+            </div>
+            <span className="text-xs text-indigo-400">{formatDate(post.created_at)}</span>
           </div>
           <p className="text-indigo-900 leading-relaxed font-medium">
             "{post.comment}"

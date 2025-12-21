@@ -10,22 +10,28 @@ interface User {
 }
 
 interface AuthContextType {
-  user: User | null;
+  user: User;
   login: (name: string, pin: string) => Promise<boolean>;
   logout: () => void;
+  isLoggedIn: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const anonymousUser: User = { id: "anonymous", name: "익명" };
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User>(anonymousUser);
   const router = useRouter();
+  const isLoggedIn = user.id !== "anonymous";
 
   // 1. 새로고침 해도 로그인 유지하기 (localStorage 확인)
   useEffect(() => {
     const savedUser = localStorage.getItem("music_user");
     if (savedUser) {
       setUser(JSON.parse(savedUser));
+    } else {
+      setUser(anonymousUser);
     }
   }, []);
 
@@ -53,14 +59,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // 3. 로그아웃 함수
   const logout = () => {
-    setUser(null);
+    setUser(anonymousUser); // 익명 유저로 리셋
     localStorage.removeItem("music_user");
     router.push("/");
     router.refresh();
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );

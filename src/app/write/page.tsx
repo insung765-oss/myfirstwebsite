@@ -6,7 +6,7 @@ import { useState } from "react";
 import StarRating from "@/components/StarRating";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/context/AuthContext"; // 👈 1. AuthContext 불러오기
+import { useAuth } from "@/context/AuthContext";
 
 // 검색 결과 데이터 타입 정의
 interface Track {
@@ -17,7 +17,7 @@ interface Track {
 }
 
 export default function WritePage() {
-  const { user } = useAuth(); // 👈 2. 현재 로그인한 유저 정보 가져오기
+  const { user } = useAuth();
   const router = useRouter();
   
   const [keyword, setKeyword] = useState("");
@@ -61,13 +61,6 @@ export default function WritePage() {
 
   // 4. 최종 저장 (DB 연결)
   const handleSubmit = async () => {
-    // 👈 3. 로그인 체크 추가
-    if (!user) {
-      alert("로그인이 필요한 기능입니다! 로그인 페이지로 이동합니다.");
-      router.push("/login");
-      return;
-    }
-
     if (!selectedTrack) return alert("노래를 선택해주세요!");
     if (rating === 0) return alert("별점을 매겨주세요!");
 
@@ -81,11 +74,26 @@ export default function WritePage() {
         spotify_id: selectedTrack.id,
         rating: rating,
         comment: comment,
-        user_name: user.name, // 👈 4. "익명" 대신 진짜 유저 이름(user.name) 사용
+        user_name: user.name,
       });
 
       if (error) throw error;
 
+      try {
+        const res = await fetch("/api/spotify/add-track", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ trackId: selectedTrack.id }),
+        });
+  
+        if (!res.ok) {
+          console.warn("스포티파이 플리 추가 실패 (하지만 DB엔 저장됨)");
+        }
+      } catch (spotifyError) {
+        console.error("Spotify add error:", spotifyError);
+        // 플리 추가 실패해도 글은 써진 것이므로 굳이 에러창을 띄우진 않음 (선택사항)
+      }
+      
       alert("저장되었습니다! 🎉");
       router.push("/digging");
       router.refresh();
@@ -102,22 +110,13 @@ export default function WritePage() {
     <main className="max-w-xl mx-auto min-h-screen bg-white pb-20">
       {/* 헤더 */}
       <header className="p-4 flex items-center gap-4 border-b border-gray-100">
-        <Link href="/" className="text-gray-600 hover:text-black">
+        <Link href="/digging" className="text-gray-600 hover:text-black">
           <ArrowLeft size={24} />
         </Link>
         <h1 className="font-bold text-lg">노래 추천하기</h1>
       </header>
 
       <div className="p-6 space-y-8">
-        
-        {/* 👈 5. 로그인한 사용자 환영 메시지 (UX 추가) */}
-        {user && (
-          <div className="bg-indigo-50 text-indigo-900 px-4 py-3 rounded-xl text-sm font-medium flex items-center gap-2">
-            <span className="bg-indigo-200 text-indigo-800 text-xs px-2 py-0.5 rounded-md font-bold">USER</span>
-            안녕하세요, <b>{user.name}</b>님! 좋은 노래를 알려주세요.
-          </div>
-        )}
-
         {/* === 섹션 1: 노래 검색 및 선택 === */}
         <section>
           <label className="block font-bold text-gray-800 mb-2">어떤 노래인가요?</label>

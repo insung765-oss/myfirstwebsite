@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import StarRating from "@/components/StarRating";
 import { User, Star } from "lucide-react";
-import { useAuth } from "@/context/AuthContext"; // 유저 정보 가져오기
-import { useRouter } from "next/navigation";     // 이동 도구 가져오기
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { formatDate } from "@/utils/date"; // 👈 날짜 포맷 함수 불러오기
 
 interface Comment {
   id: string;
@@ -16,8 +17,8 @@ interface Comment {
 }
 
 export default function CommentSection({ postId }: { postId: string }) {
-  const { user } = useAuth(); // 1. 내 정보 가져오기
-  const router = useRouter(); // 2. 라우터 준비
+  const { user } = useAuth();
+  const router = useRouter();
   
   const [comments, setComments] = useState<Comment[]>([]);
   const [content, setContent] = useState("");
@@ -30,7 +31,7 @@ export default function CommentSection({ postId }: { postId: string }) {
       .from("comments")
       .select("*")
       .eq("post_id", postId)
-      .order("created_at", { ascending: false }); // 최신순
+      .order("created_at", { ascending: true }); // 👈 오래된 순으로 변경
     if (data) setComments(data);
   };
 
@@ -42,14 +43,6 @@ export default function CommentSection({ postId }: { postId: string }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 3. 로그인 체크 (안전을 위해 함수 내부에서도 한 번 더 체크)
-    if (!user) {
-      if (confirm("로그인이 필요한 기능입니다. 로그인 페이지로 갈까요?")) {
-        router.push("/login");
-      }
-      return;
-    }
-
     if (!content.trim()) return alert("내용을 입력해주세요.");
     if (rating === 0) return alert("별점을 남겨주세요.");
 
@@ -58,7 +51,7 @@ export default function CommentSection({ postId }: { postId: string }) {
       post_id: postId,
       content,
       rating,
-      user_name: user.name, // 4. "방문자" 대신 진짜 내 이름 넣기
+      user_name: user.name,
     });
 
     if (error) {
@@ -79,34 +72,24 @@ export default function CommentSection({ postId }: { postId: string }) {
 
       {/* 댓글 작성 폼 */}
       <form onSubmit={handleSubmit} className="bg-gray-50 p-4 rounded-xl mb-8">
-        
-        {/* 5. 비로그인 시 안내 문구 추가 */}
-        {!user && (
-          <div className="mb-3 text-xs text-red-500 font-bold flex items-center gap-1">
-            * 로그인이 필요합니다.
-          </div>
-        )}
-
         <div className="mb-4">
           <label className="block text-xs font-bold text-gray-500 mb-1 uppercase">My Rating</label>
           <div className="flex items-center gap-2">
-            <StarRating rating={rating} editable={!!user} onChange={setRating} />
-            <span className="font-bold text-gray-700">{rating > 0 ? rating : "0.0"}</span>
+            <StarRating rating={rating} editable={true} onChange={setRating} />
+            <span className="font-bold text-gray-700">{rating > 0 ? rating.toFixed(1) : "0.0"}</span>
           </div>
         </div>
         
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          // 6. 비로그인 시 입력 막기 & 플레이스홀더 변경
-          disabled={!user}
-          placeholder={user ? "이 노래에 대한 내 생각은?" : "로그인 후 리뷰를 남길 수 있습니다."}
-          className="w-full bg-white border border-gray-200 rounded-lg p-3 text-sm outline-none focus:ring-2 focus:ring-indigo-500 mb-3 disabled:bg-gray-100 disabled:cursor-not-allowed"
+          placeholder="이 노래에 대한 내 생각은?"
+          className="w-full bg-white border border-gray-200 rounded-lg p-3 text-sm outline-none focus:ring-2 focus:ring-indigo-500 mb-3"
           rows={3}
         />
         
         <button
-          disabled={loading || !user} // 7. 비로그인 시 버튼 비활성화
+          disabled={loading}
           className="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg text-sm hover:bg-indigo-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
           {loading ? "등록 중..." : "리뷰 남기기"}
@@ -130,7 +113,8 @@ export default function CommentSection({ postId }: { postId: string }) {
               </div>
               <p className="text-gray-700 text-sm leading-relaxed">{comment.content}</p>
               <p className="text-xs text-gray-400 mt-2">
-                {new Date(comment.created_at).toLocaleDateString()}
+                {/* ✅ 날짜 포맷 적용 */}
+                {formatDate(comment.created_at)}
               </p>
             </div>
           </div>

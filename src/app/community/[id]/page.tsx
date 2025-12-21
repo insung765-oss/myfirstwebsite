@@ -80,7 +80,6 @@ export default function CommunityDetailPage() {
 
   // 댓글 작성
   const submitComment = async () => {
-    if (!user) return alert("로그인해주세요!");
     if (!commentInput.trim()) return;
 
     const { error } = await supabase.from("community_comments").insert({
@@ -168,14 +167,12 @@ export default function CommunityDetailPage() {
               type="text"
               value={commentInput}
               onChange={(e) => setCommentInput(e.target.value)}
-              placeholder={user ? "댓글을 남겨보세요" : "로그인이 필요합니다"}
-              disabled={!user}
-              className="flex-1 bg-gray-100 rounded-full px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500 disabled:bg-gray-200"
+              placeholder="댓글을 남겨보세요"
+              className="flex-1 bg-gray-100 rounded-full px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500"
             />
             <button 
               onClick={submitComment}
-              disabled={!user}
-              className="bg-purple-600 text-white p-3 rounded-full hover:bg-purple-700 disabled:bg-gray-300 transition"
+              className="bg-purple-600 text-white p-3 rounded-full hover:bg-purple-700 transition"
             >
               <Send size={20} />
             </button>

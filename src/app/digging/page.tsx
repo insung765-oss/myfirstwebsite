@@ -53,10 +53,10 @@ export default async function Home() {
                   {/* 곡 정보 및 평점 */}
                   <div className="flex-1 flex justify-between">
                     <div className="flex flex-col justify-center min-w-0">
-                      <h2 className="text-xl font-bold text-gray-900 leading-tight truncate pr-2">
+                      <h2 className="text-xl font-bold text-gray-900 leading-tight pr-2">
                         {post.title}
                       </h2>
-                      <p className="text-gray-600 font-medium truncate">
+                      <p className="text-gray-600 font-medium">
                         {post.artist}
                       </p>
                       <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
@@ -68,7 +68,7 @@ export default async function Home() {
                     </div>
 
                     {/* 점수 표시 (RYM 스타일) */}
-                    <div className="flex flex-col items-end justify-center min-w-[70px]">
+                    <div className="flex flex-col items-end justify-center shrink-0 min-w-[70px]">
                       {/* 1. 평균 점수 (소수점 2자리) */}
                       <div className="text-3xl font-extrabold text-indigo-600 tracking-tighter">
                         {post.average_rating ? post.average_rating.toFixed(2) : "0.00"}
