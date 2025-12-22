@@ -33,7 +33,7 @@ export default function LandingPage() {
 
       {/* --- 섹션 1: 메인 콘텐츠 --- */}
       <main className="relative z-10">
-        <div className="flex flex-col items-center px-6 pt-12">
+        <div className="flex flex-col items-center px-6 pt-18">
           
           {/* 로고 영역 */}
           <div className="text-center mb-12">
