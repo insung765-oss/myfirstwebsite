@@ -37,10 +37,10 @@ export default function LandingPage() {
           
           {/* 로고 영역 */}
           <div className="text-center mb-12">
-            <h1 className="text-5xl font-extrabold text-white tracking-tighter mb-2">
+            <h1 className="text-7xl font-black text-white tracking-tighter mb-2">
               모모22
             </h1>
-            <p className="font-light text-gray-400">
+            <p className="text-2xl font-light text-gray-400">
               디깅으로 세상을 아름답게
             </p>
           </div>
@@ -100,10 +100,10 @@ export default function LandingPage() {
         variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.3 }}
+        viewport={{ amount: 0.7 }}
       >
         <div className="max-w-2xl">
-            <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter">
+            <h1 className="text-4xl md:text-8xl font-black mb-6 tracking-tighter">
                 디깅이란.
             </h1>
             <div className="text-lg text-gray-300 leading-relaxed tracking-tighter">
@@ -114,15 +114,15 @@ export default function LandingPage() {
                 <p className="mb-2">
                   우리는 모두가 타고난 디깅러였다. 어린 시절, 온종일 모래를 파헤치며 찾아낸 반짝이던 돌멩이 하나를 지금도 기억한다. 
                   언제부턴가 우리는 더 이상 땅을 파며 놀지 않게 되었고, 어른이 되어가며 눈에 익은 풍경은 회색빛이었다. 
-                  디깅은 무뎌지기 전 그때의 자기 자신과 마주볼 수 있게 해준다. 
+                  디깅은 무뎌지기 전 그때의 나 자신과 마주볼 수 있게 해준다. 
                   운명처럼 찾아온 그 곡에서 잊고 있던 설렘을 발견하는 순간, 무채색 손바닥 위에 다시금 반짝이는 돌멩이 하나가 쥐어져 있을 것이다. 
                 </p>
                 <p>
                   뛰어난 성취의 작품을 감상하는 건 잔잔한 호수에 돌을 던지는 것과 비슷하다. 
-                  무의식이란 수면에 너울을 일으켜 바닥에 가라앉은 이름 모를 정서들을 한번 환기한다. 
+                  무의식이란 수면에 너울을 일으켜 바닥에 가라앉은 이름 모를 정서들을 한번씩 환기한다. 
                   이 메커니즘은 단순한 감상을 넘어 창작을 위한 영감의 불씨가 되어준다. 
                   우리들 중 누군가 세상에 없던 멋진 걸 만들어낼지 누가 아는가. 
-                  그래서 우리는 믿어 의심치 않는다. 디깅이 세상을 아름답게 바꾸는데 기여할 수 있다고.
+                  그래서 우리는 믿어 의심치 않는다. 디깅이 세상을 아름답게 할 수 있다고.
                 </p>
             </div>
             <p className="text-sm text-gray-400 mt-4">
