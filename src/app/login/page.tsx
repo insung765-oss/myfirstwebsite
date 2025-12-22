@@ -15,7 +15,7 @@ export default function LoginPage() {
     e.preventDefault();
     const success = await login(name, pin);
     if (success) {
-      router.back(); // 로그인 전 페이지로 돌아가기
+      router.push('/'); // 메인 화면으로 이동
     }
   };
 

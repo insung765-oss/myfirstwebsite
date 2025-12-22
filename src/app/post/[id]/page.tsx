@@ -7,7 +7,7 @@ import { formatDate } from "@/utils/date";
 export const revalidate = 0;
 
 // ✅ Next.js 15/16 필수 수정: params 타입을 Promise로 정의해야 합니다.
-export default async function PostDetail({ params }: { params: Promise<{ id: string }> }) {
+export default async function PostDetail({ params }: { params: Promise<{ id:string }> }) {
   
   // ✅ 핵심: params를 반드시 await으로 기다렸다가 까봐야 합니다!
   const { id } = await params;
@@ -57,12 +57,15 @@ export default async function PostDetail({ params }: { params: Promise<{ id: str
           <h2 className="text-2xl font-bold text-gray-900 mb-1">{post.title}</h2>
           <p className="text-lg text-gray-600 mb-0">{post.artist}</p>
 
-          <div className="flex justify-center items-baseline gap-4 my-6">
-            <div className="text-4xl font-extrabold text-indigo-600 tracking-tighter">
+          {/* 평점 및 참여자 수 (수평 디자인 수정) */}
+          <div className="flex justify-center items-center gap-8 my-6">
+            {/* 평균 평점 */}
+            <div className="text-6xl font-extrabold text-indigo-600 tracking-tighter">
               {(post.average_rating || 0).toFixed(2)}
             </div>
-            <div className="flex items-center gap-1.5 text-xl font-medium text-gray-600">
-              <Star size={18} className="fill-gray-400 text-gray-400" />
+            {/* 참여자 수 */}
+            <div className="flex items-center gap-2 text-4xl font-medium text-gray-500">
+              <Star size={24} className="fill-gray-400 text-gray-400" />
               <span>{post.total_count || 0}</span>
             </div>
           </div>

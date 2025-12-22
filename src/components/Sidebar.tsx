@@ -119,18 +119,18 @@ export default function Sidebar() {
             <hr className="border-gray-100" />
           </div>
 
-          {/* 스포티파이 바로가기 */}
+          {/* 스포티파이 바로가기 (색상 수정) */}
           <a
             href={spotifyPlaylistUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleLinkClick}
-            className="flex items-start gap-3 px-4 pt-3 pb-2 rounded-xl transition font-medium text-gray-500 hover:bg-green-50 hover:text-green-700 group"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl transition font-medium text-gray-500 hover:bg-gray-50"
           >
-            <SpotifyLogoIcon className="w-5 h-5 flex-shrink-0 mt-0.5 text-gray-400 group-hover:text-green-600 transition-colors" />
-            <span className="text-sm leading-snug font-medium">플레이리스트</span>
+            <SpotifyLogoIcon className="w-5 h-5 flex-shrink-0 text-gray-400" />
+            플레이리스트
           </a>
-          <p className="px-4 text-xs text-gray-400 -mt-1">
+          <p className="px-4 text-xs text-gray-400 mt-1">
             디깅 탭의 추천곡들을 스포티파이에서 편하게 들어보세요.
           </p>
         </nav>
