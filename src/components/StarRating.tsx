@@ -1,7 +1,7 @@
 "use client";
 
 import { Star } from "lucide-react";
-import { useState } from "react";
+import { useState, MouseEvent, TouchEvent } from "react";
 
 interface Props {
   rating: number;
@@ -19,33 +19,70 @@ export default function StarRating({ rating, editable = false, onChange }: Props
     // 현재 표시해야 할 점수 (호버 중이면 호버 점수, 아니면 고정 점수)
     const currentRating = editable && hover > 0 ? hover : rating;
     
-    // 꽉 찬 별 조건
     const isFull = currentRating >= starValue;
-    // 반 개 별 조건 (예: 3.5점일 때 4번째 별은 반 개여야 함)
     const isHalf = !isFull && currentRating >= starValue - 0.5;
+
+    // Helper to calculate rating from pointer position within the star element
+    const calculateRating = (clientX: number, target: HTMLElement): number => {
+        const { left, width } = target.getBoundingClientRect();
+        const percent = (clientX - left) / width;
+        const newValue = percent < 0.5 ? starValue - 0.5 : starValue;
+        return newValue;
+    };
+
+    // --- Event Handlers ---
+
+    // Handles mouse moving over a star
+    const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+        if (!editable) return;
+        setHover(calculateRating(e.clientX, e.currentTarget));
+    };
+
+    // Handles finger moving over a star on a touch device
+    const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
+        if (!editable) return;
+        setHover(calculateRating(e.touches[0].clientX, e.currentTarget));
+    };
+
+    // Resets hover state when mouse leaves the star area
+    const handleMouseLeave = () => {
+        if (!editable) return;
+        setHover(0);
+    };
+
+    // Handles the final rating selection on click or touch end
+    const handleSelect = (clientX: number, target: HTMLElement) => {
+        if (!editable || !onChange) return;
+        const finalRating = calculateRating(clientX, target);
+        onChange(finalRating);
+        setHover(0); // Reset hover after selection
+    };
+
+    // Wrapper for mouse click for non-touch devices
+    const handleClick = (e: MouseEvent<HTMLDivElement>) => {
+        if (typeof window !== "undefined" && "ontouchstart" in window) return;
+        handleSelect(e.clientX, e.currentTarget);
+    };
+    
+    // Wrapper for touch end
+    const handleTouchEnd = (e: TouchEvent<HTMLDivElement>) => {
+        e.preventDefault(); // Prevent ghost click
+        handleSelect(e.changedTouches[0].clientX, e.currentTarget);
+    };
 
     return (
       <div
         key={index}
         className={`relative ${editable ? "cursor-pointer" : "cursor-default"}`}
-        onMouseMove={(e) => {
-          if (!editable || !onChange) return;
-          // 마우스가 별의 왼쪽 절반에 있으면 -0.5, 오른쪽이면 정수
-          const { left, width } = e.currentTarget.getBoundingClientRect();
-          const percent = (e.clientX - left) / width;
-          const newValue = percent < 0.5 ? starValue - 0.5 : starValue;
-          setHover(newValue);
-        }}
-        onClick={() => {
-          if (editable && onChange) onChange(hover);
-        }}
-        onMouseLeave={() => editable && setHover(0)}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd} // This is key for mobile tap
+        onClick={handleClick}      // Fallback for desktop click
       >
-        {/* 별 모양 (빈 별, 반 별, 꽉 찬 별 교체) */}
         {isFull ? (
           <Star className="text-yellow-400 fill-yellow-400" size={24} />
         ) : isHalf ? (
-          // Lucide에는 StarHalf가 있지만 왼쪽 절반만 채우기 위해 스타일 조정
           <div className="relative">
             <Star className="text-gray-300" size={24} />
             <div className="absolute top-0 left-0 overflow-hidden w-[50%]">

@@ -33,7 +33,7 @@ export default function LandingPage() {
 
       {/* --- 섹션 1: 메인 콘텐츠 --- */}
       <main className="relative z-10">
-        <div className="min-h-screen flex flex-col items-center justify-center pt-24 px-6">
+        <div className="flex flex-col items-center px-6 pt-12">
           
           {/* 로고 영역 */}
           <div className="text-center mb-12">
@@ -96,14 +96,14 @@ export default function LandingPage() {
 
       {/* --- 섹션 2: Framer Motion으로 애니메이션 효과 적용 --- */}
       <motion.section 
-        className="text-white flex flex-col items-center text-left p-8 relative z-10 pt-60 pb-20"
+        className="text-white flex flex-col items-center text-left p-8 relative z-10 pt-20 pb-20"
         variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ amount: 0.3 }}
       >
         <div className="max-w-2xl">
-            <h1 className="text-4xl md:text-8xl font-black mb-6 tracking-tighter">
+            <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tighter">
                 디깅이란.
             </h1>
             <div className="text-lg text-gray-300 leading-relaxed tracking-tighter">
