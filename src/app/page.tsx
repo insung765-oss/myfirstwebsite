@@ -100,7 +100,7 @@ export default function LandingPage() {
         variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ amount: 0.7 }}
+        viewport={{ amount: 0.3 }}
       >
         <div className="max-w-2xl">
             <h1 className="text-4xl md:text-8xl font-black mb-6 tracking-tighter">
