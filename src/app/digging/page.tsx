@@ -60,7 +60,7 @@ export default async function Home() {
                         {post.artist}
                       </p>
                       <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
-                        Recommended by{" "}
+                        {" "}
                         <span className="text-gray-600 font-medium bg-gray-100 px-1.5 py-0.5 rounded">
                           {post.user_name}
                         </span>
