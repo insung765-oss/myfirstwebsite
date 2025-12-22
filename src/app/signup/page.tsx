@@ -26,9 +26,9 @@ export default function SignupPage() {
     if (error) {
       // 이미 있는 이름일 경우 (users 테이블 name에 UNIQUE 걸려있음)
       if (error.code === "23505") {
-        alert("이미 사용 중인 이름입니다! 다른 이름을 써주세요.");
+        alert("이미 사용 중인 닉네임입니다! 다른 닉네임을 써주세요.");
       } else {
-        alert("회원가입 실패 ㅠㅠ 관리자에게 문의하세요.");
+        alert("회원가입 실패. 관리자에게 문의하세요.");
         console.error(error);
       }
     } else {
@@ -43,12 +43,12 @@ export default function SignupPage() {
         <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">회원가입</h1>
         <div className="mt-4 mb-4 text-center text-xs text-gray-500">
           <p>‼️평소에 사용하시는 비밀번호는 가급적 쓰지 말아주세요‼️</p>
-          <p>보안 모듈 만드려다가 멘탈 터져서 부득이하게 주인장이 여러분의 소중한 비번을 열람 가능한 구조가 됐습니다..</p>
+          <p>보안 모듈 만들다가 멘탈이 나간 관계로 부득이하게 주인장이 여러분의 소중한 비번을 열람 가능한 구조가 됐습니다..</p>
         </div>
         
         <form onSubmit={handleSignup} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1">사용할 이름 (닉네임)</label>
+            <label className="block text-sm font-bold text-gray-700 mb-1">닉네임</label>
             <input
               type="text"
               value={name}

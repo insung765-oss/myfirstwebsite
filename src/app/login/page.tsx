@@ -26,7 +26,7 @@ export default function LoginPage() {
         
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1">이름</label>
+            <label className="block text-sm font-bold text-gray-700 mb-1">닉네임</label>
             <input
               type="text"
               value={name}
@@ -36,7 +36,7 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1">비밀번호 (4자리)</label>
+            <label className="block text-sm font-bold text-gray-700 mb-1">비밀번호 (4자리 숫자)</label>
             <input
               type="password"
               value={pin}

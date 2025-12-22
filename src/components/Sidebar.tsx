@@ -64,13 +64,13 @@ export default function Sidebar() {
             </div>
           ) : (
             <div className="text-center">
-              <p className="text-sm font-medium text-gray-600 mb-3">로그인하고 더 많은 기능을 즐겨보세요</p>
+              <p className="text-sm font-medium text-gray-600 mb-3">가입한다고 별건 없지만</p>
               <Link
                 href="/login"
                 onClick={handleLinkClick}
                 className="block w-full bg-indigo-600 text-white py-2.5 rounded-lg text-sm font-bold hover:bg-indigo-700 transition shadow-sm"
               >
-                로그인 / 가입
+                로그인 / 회원가입
               </Link>
             </div>
           )}
@@ -131,7 +131,7 @@ export default function Sidebar() {
             플레이리스트
           </a>
           <p className="px-4 text-xs text-gray-400 mt-1">
-            디깅 탭의 추천곡들을 스포티파이에서 편하게 들어보세요.
+            실시간 갱신되는 플레이리스트로 모모22 추천곡들을 언제 어디서나!
           </p>
         </nav>
 

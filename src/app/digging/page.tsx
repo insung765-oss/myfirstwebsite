@@ -70,7 +70,7 @@ export default async function Home() {
                     {/* 점수 표시 (RYM 스타일) */}
                     <div className="flex flex-col items-end justify-center shrink-0 min-w-[70px]">
                       {/* 1. 평균 점수 (소수점 2자리) */}
-                      <div className="text-3xl font-extrabold text-indigo-600 tracking-tighter">
+                      <div className="text-3xl font-extrabold text-indigo-600">
                         {post.average_rating ? post.average_rating.toFixed(2) : "0.00"}
                       </div>
                       

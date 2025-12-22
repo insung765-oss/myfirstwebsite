@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { ArrowLeft, ThumbsUp, ThumbsDown, Send } from "lucide-react";
+import { ArrowLeft, ThumbsUp, Send } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { formatDate } from "@/utils/date"; // 👈 날짜 포맷 함수 불러오기
+import { formatDate } from "@/utils/date";
 
 export default function CommunityDetailPage() {
   const { id } = useParams();
@@ -17,7 +17,6 @@ export default function CommunityDetailPage() {
   const [commentInput, setCommentInput] = useState("");
 
   const fetchData = async () => {
-    // 1. 글 가져오기
     const { data: postData } = await supabase
       .from("community_posts")
       .select("*")
@@ -25,7 +24,6 @@ export default function CommunityDetailPage() {
       .single();
     setPost(postData);
 
-    // 2. 댓글 가져오기
     const { data: commentData } = await supabase
       .from("community_comments")
       .select("*")
@@ -38,47 +36,44 @@ export default function CommunityDetailPage() {
     fetchData();
   }, [id]);
 
-  // ✅ 투표 핸들러 (하루 1회 제한)
-  const handleVote = async (type: "upvotes" | "downvotes") => {
-    if (!user) return alert("로그인해주세요!");
+  // 수정된 추천 핸들러
+  const handleRecommend = async () => {
+    // 1. 비로그인 사용자 처리
+    if (!user) {
+      alert("비로그인 상태에서는 추천을 할 수 없습니다. 😢");
+      return;
+    }
     if (!post) return;
 
-    const voteTypeShort = type === "upvotes" ? "up" : "down";
-
-    // 1. 오늘 이미 투표했는지 확인
-    // (오늘 0시부터 현재까지 내 이름으로 된 투표가 있는지 조회)
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // 오늘 0시 0분 0초로 설정
-
+    // 2. 이미 추천했는지 확인 (게시물 ID와 사용자 이름으로)
     const { data: existingVote } = await supabase
       .from("community_votes")
-      .select("*")
+      .select("id")
       .eq("post_id", id)
       .eq("user_name", user.name)
-      .gte("created_at", today.toISOString()) // 오늘 날짜 이후인 것만
       .maybeSingle();
 
+    // 3. 이미 추천한 경우 메시지 표시
     if (existingVote) {
-      return alert("투표는 하루에 한 번만 가능해요! 😅");
+      alert("이미 추천한 게시글입니다. 😉");
+      return;
     }
 
-    // 2. 투표 기록 남기기
+    // 4. 추천 기록 및 게시글 추천 수 업데이트
     await supabase.from("community_votes").insert({
       post_id: id,
       user_name: user.name,
-      vote_type: voteTypeShort,
+      vote_type: 'up',
     });
 
-    // 3. 게시글 숫자 올리기
     const { error } = await supabase
       .from("community_posts")
-      .update({ [type]: post[type] + 1 })
+      .update({ upvotes: post.upvotes + 1 })
       .eq("id", id);
     
     if (!error) fetchData();
   };
 
-  // 댓글 작성
   const submitComment = async () => {
     if (!commentInput.trim()) return;
 
@@ -109,7 +104,6 @@ export default function CommunityDetailPage() {
         <h1 className="text-2xl font-bold text-gray-900 mb-2">{post.title}</h1>
         <div className="flex justify-between items-center text-sm text-gray-500 mb-6 border-b border-gray-100 pb-4">
           <span className="font-bold">{post.user_name}</span>
-          {/* ✅ 날짜 포맷 적용 */}
           <span>{formatDate(post.created_at)}</span>
         </div>
 
@@ -127,18 +121,11 @@ export default function CommunityDetailPage() {
 
         <div className="flex justify-center gap-4 mb-10">
           <button 
-            onClick={() => handleVote("upvotes")}
-            className="flex flex-col items-center gap-1 px-6 py-3 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition"
+            onClick={handleRecommend}
+            className="flex flex-col items-center gap-1 px-8 py-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition"
           >
             <ThumbsUp size={24} />
             <span className="font-bold">{post.upvotes}</span>
-          </button>
-          <button 
-            onClick={() => handleVote("downvotes")}
-            className="flex flex-col items-center gap-1 px-6 py-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition"
-          >
-            <ThumbsDown size={24} />
-            <span className="font-bold">{post.downvotes}</span>
           </button>
         </div>
 
@@ -152,7 +139,6 @@ export default function CommunityDetailPage() {
               <div key={comment.id} className="bg-gray-50 p-3 rounded-lg">
                 <div className="flex justify-between items-center mb-1">
                   <span className="font-bold text-sm">{comment.user_name}</span>
-                  {/* ✅ 댓글 날짜도 포맷 적용 */}
                   <span className="text-xs text-gray-400">
                     {formatDate(comment.created_at)}
                   </span>

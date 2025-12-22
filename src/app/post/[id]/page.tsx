@@ -58,15 +58,15 @@ export default async function PostDetail({ params }: { params: Promise<{ id:stri
           <p className="text-lg text-gray-600 mb-0">{post.artist}</p>
 
           {/* 평점 및 참여자 수 (수평 디자인 수정) */}
-          <div className="flex justify-center items-baseline gap-8 my-6">
+          <div className="flex justify-center items-center gap-6 my-6">
             {/* 평균 평점 */}
-            <div className="text-5xl font-extrabold text-indigo-600 tracking-tighter">
+            <div className="text-5xl font-extrabold text-indigo-600">
               {(post.average_rating || 0).toFixed(2)}
             </div>
             {/* 참여자 수 */}
-            <div className="flex items-center gap-2 text-2xl font-medium text-gray-500">
-              <Star size={18} className="fill-gray-400 text-gray-400" />
-              <span>{post.total_count || 0}</span>
+            <div className="flex items-center gap-1 text-xl font-medium text-gray-500">
+              <Star size={12} className="fill-gray-400 text-gray-400" />
+              <span>{post.total_count || 0} ratings</span>
             </div>
           </div>
           
