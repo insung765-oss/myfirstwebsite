@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { ArrowLeft, User } from "lucide-react";
+import { ArrowLeft, User, Star } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import CommentSection from "@/components/CommentSection";
-import StarRating from "@/components/StarRating";
 import { formatDate } from "@/utils/date";
 
 export const revalidate = 0;
@@ -13,17 +12,31 @@ export default async function PostDetail({ params }: { params: Promise<{ id: str
   // ✅ 핵심: params를 반드시 await으로 기다렸다가 까봐야 합니다!
   const { id } = await params;
 
-  // 1. 가져온 id로 DB 조회
-  const { data: post, error } = await supabase
+  // 1. posts 테이블에서 기본 정보 조회 (작성자 별점 포함)
+  const { data: postData, error: postError } = await supabase
     .from("posts")
     .select("*")
     .eq("id", id)
     .single();
 
-  if (error || !post) {
-    console.error("글 불러오기 실패:", error);
+  // 2. post_analytics 뷰에서 통계 데이터 조회
+  const { data: analyticsData, error: analyticsError } = await supabase
+    .from("post_analytics")
+    .select("average_rating, total_count")
+    .eq("id", id)
+    .single();
+
+  if (postError || !postData) {
+    console.error("글 불러오기 실패:", postError);
     return <div className="text-center py-20">글을 찾을 수 없습니다.</div>;
   }
+
+  // 3. 두 데이터 병합
+  const post = {
+    ...postData,
+    average_rating: analyticsData?.average_rating || 0,
+    total_count: analyticsData?.total_count || 0,
+  };
 
   return (
     <main className="max-w-xl mx-auto min-h-screen bg-white pb-20">
@@ -42,15 +55,18 @@ export default async function PostDetail({ params }: { params: Promise<{ id: str
             className="w-48 h-48 rounded-xl shadow-lg mb-6 object-cover"
           />
           <h2 className="text-2xl font-bold text-gray-900 mb-1">{post.title}</h2>
-          <p className="text-lg text-gray-600 mb-4">{post.artist}</p>
-          
-          <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full mb-6">
-            <span className="text-xs font-bold text-gray-500 uppercase">Writer's Pick</span>
-            {/* StarRating이 문제를 일으키지 않도록 안전하게 렌더링 */}
-            <StarRating rating={post.rating || 0} />
-            <span className="font-bold text-gray-800">{post.rating}</span>
-          </div>
+          <p className="text-lg text-gray-600 mb-0">{post.artist}</p>
 
+          <div className="flex justify-center items-baseline gap-4 my-6">
+            <div className="text-4xl font-extrabold text-indigo-600 tracking-tighter">
+              {(post.average_rating || 0).toFixed(2)}
+            </div>
+            <div className="flex items-center gap-1.5 text-xl font-medium text-gray-600">
+              <Star size={18} className="fill-gray-400 text-gray-400" />
+              <span>{post.total_count || 0}</span>
+            </div>
+          </div>
+          
           <iframe
             style={{ borderRadius: "12px" }}
             src={`https://open.spotify.com/embed/track/${post.spotify_id}?utm_source=generator`}
@@ -62,16 +78,22 @@ export default async function PostDetail({ params }: { params: Promise<{ id: str
           ></iframe>
         </section>
 
+        {/* 작성자 코멘트 섹션 (디자인 수정) */}
         <section className="bg-indigo-50 p-6 rounded-2xl mb-8 relative overflow-hidden">
-          <div className="flex justify-between items-center mb-3">
-            <div className="flex items-center gap-2">
-              <User size={16} className="text-indigo-600"/>
-              <span className="font-bold text-indigo-900">{post.user_name}</span>
+          <div className="flex justify-between items-start mb-2">
+            <span className="font-bold text-indigo-900">{post.user_name}</span>
+            <div className="flex items-center gap-1 bg-indigo-100 px-2 py-1 rounded-full text-xs font-bold text-indigo-700">
+              <Star size={12} className="fill-indigo-500 text-indigo-500" />
+              <span>{(post.rating || 0).toFixed(1)}</span>
             </div>
-            <span className="text-xs text-indigo-400">{formatDate(post.created_at)}</span>
           </div>
-          <p className="text-indigo-900 leading-relaxed font-medium">
+
+          <p className="text-indigo-900 leading-relaxed font-medium my-3">
             "{post.comment}"
+          </p>
+
+          <p className="text-xs text-indigo-400 text-left">
+            {formatDate(post.created_at)}
           </p>
         </section>
 
