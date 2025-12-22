@@ -1,24 +1,40 @@
 'use client';
 
 import Link from "next/link";
-import { Disc, Users, ArrowRight, Music, Heart } from "lucide-react";
+import { Disc, Users, ArrowRight } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { SpotifyLogoIcon } from "@/components/icons/SpotifyLogoIcon";
+import { motion, Variants } from 'framer-motion';
 
 export default function LandingPage() {
   const spotifyPlaylistUrl = 'https://open.spotify.com/playlist/2SnuoTKWO0YOoGqU53uvV4';
   const { isLoggedIn, logout } = useAuth();
 
-  return (
-    <div>
-      {/* --- 섹션 1: 위로 올라가는 커튼 (메인 콘텐츠) --- */}
-      <main className="relative z-10 bg-gray-900 mb-[100vh]">
-        <div className="min-h-[130vh] flex flex-col items-center justify-start pt-24 px-6 relative overflow-hidden">
-          
-          {/* 배경 장식 */}
-          <div className="absolute top-[-10%] left-[-10%] w-64 h-64 bg-indigo-600 rounded-full blur-[120px] opacity-20"></div>
-          <div className="absolute bottom-[-10%] right-[-10%] w-64 h-64 bg-purple-600 rounded-full blur-[120px] opacity-20"></div>
+  const sectionVariants: Variants = {
+    hidden: {
+      opacity: 0,
+      y: 50,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
 
+  return (
+    <div className="bg-gray-800 relative">
+      {/* --- 통합 배경 장식 --- */}
+      <div className="absolute top-0 left-0 w-full h-full z-0">
+        <div className="absolute top-[5vh] left-[-15vw] w-[40vw] h-[40vw] bg-indigo-600 rounded-full blur-[150px] opacity-15"></div>
+        <div className="absolute top-[140vh] left-[-10vw] w-[45vw] h-[45vw] bg-indigo-600 rounded-full blur-[160px] opacity-20"></div>
+      </div>
+
+      {/* --- 섹션 1: 메인 콘텐츠 --- */}
+      <main className="relative z-10">
+        <div className="min-h-screen flex flex-col items-center justify-center pt-24 px-6">
+          
           {/* 로고 영역 */}
           <div className="text-center mb-12">
             <h1 className="text-5xl font-extrabold text-white tracking-tighter mb-2">
@@ -47,7 +63,7 @@ export default function LandingPage() {
             />
           </div>
 
-          {/* 하단 링크 (콘텐츠 블록의 일부로 유지) */}
+          {/* 하단 링크 */}
           <div className="text-center mt-12 h-5"> 
             {isLoggedIn ? (
               <button 
@@ -78,13 +94,18 @@ export default function LandingPage() {
         </div>
       </main>
 
-      {/* --- 섹션 2: 고정된 바닥 (푸터) - 수정된 부분 --- */}
-      <footer className="fixed inset-0 z-0 bg-gray-800 text-white flex flex-col items-center justify-center text-left p-8">
+      {/* --- 섹션 2: Framer Motion으로 애니메이션 효과 적용 --- */}
+      <motion.section 
+        className="text-white flex flex-col items-center text-left p-8 relative z-10 pt-60 pb-20"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ amount: 0.3 }}
+      >
         <div className="max-w-2xl">
             <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter">
                 디깅이란.
             </h1>
-            {/* 본문 서식 수정 */}
             <div className="text-lg text-gray-300 leading-relaxed tracking-tighter">
                 <p className="mb-2">
                   디깅은 자신의 취향이나 관심사를 넓힐 목적으로 특정 분야에 깊이 파고들어 탐구하고 몰입하는 행위를 뜻한다. 
@@ -101,15 +122,14 @@ export default function LandingPage() {
                   무의식이란 수면에 너울을 일으켜 바닥에 가라앉은 이름 모를 정서들을 한번 환기한다. 
                   이 메커니즘은 단순한 감상을 넘어 창작을 위한 영감의 불씨가 되어준다. 
                   우리들 중 누군가 세상에 없던 멋진 걸 만들어낼지 누가 아는가. 
-                  그래서 우리는 믿어 의심치 않는다. 디깅이 세상을 아름답게 바꿀 수 있다고.
+                  그래서 우리는 믿어 의심치 않는다. 디깅이 세상을 아름답게 바꾸는데 기여할 수 있다고.
                 </p>
             </div>
-            {/* 폰트 안내 분리 및 스타일링 */}
             <p className="text-sm text-gray-400 mt-4">
                 폰트: PAPERLOGY
             </p>
         </div>
-      </footer>
+      </motion.section>
     </div>
   );
 }

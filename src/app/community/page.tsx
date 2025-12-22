@@ -66,11 +66,11 @@ export default async function CommunityPage() {
                     <span className="font-bold text-gray-700">{post.user_name}</span>
                     
                     <div className="flex items-center gap-4 text-sm">
-                        {/* 추천 수 (0보다 클 때만 표시) */}
-                        {post.score > 0 && (
+                        {/* 추천 수 (0보다 클 때만 표시) - post.score를 post.upvotes로 수정했습니다. */}
+                        {post.upvotes > 0 && (
                             <div className="flex items-center gap-1.5 text-red-500">
                                 <ThumbsUp size={16} />
-                                <span className="font-semibold">{post.score}</span>
+                                <span className="font-semibold">{post.upvotes}</span>
                             </div>
                         )}
                         {/* 댓글 수 */}
