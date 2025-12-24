@@ -28,12 +28,12 @@ export default function SignUpPage() {
     setError('');
 
     if (!name.trim()) {
-      setError('당신을 부를 멋진 닉네임을 알려주세요.');
+      setError('닉네임을 입력해주세요.');
       return;
     }
 
     if (!pin.match(/^\d{4}$/)) {
-      setError('비밀번호는 4자리 숫자로만 만들어주세요.');
+      setError('비밀번호는 4자리 숫자로 입력해주세요.');
       return;
     }
 
@@ -51,7 +51,7 @@ export default function SignUpPage() {
 
       if (signUpError) {
         if (signUpError.message.includes("User already registered")) {
-          setError("이미 다른 분이 사용하고 있는 닉네임이네요. 더 멋진 이름은 어떠세요?");
+          setError("이미 사용중인 닉네임이에요.");
         } else {
           throw signUpError;
         }
@@ -76,12 +76,6 @@ export default function SignUpPage() {
     <main className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="bg-white w-full max-w-sm p-8 rounded-2xl shadow-lg border border-gray-100">
         <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">회원가입</h1>
-        
-        {/* ㄱ버전 특유의 경고 문구 유지 */}
-        <div className="mt-4 mb-4 text-center text-xs text-gray-500">
-          <p>‼️평소에 사용하시는 비밀번호는 가급적 쓰지 말아주세요‼️</p>
-          <p>보안 모듈 만들다가 멘탈이 나간 관계로 부득이하게 주인장이 여러분의 소중한 비번을 열람 가능한 구조가 됐습니다..</p>
-        </div>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

@@ -266,10 +266,10 @@ export default function CommunityDetailPage() {
   return (
     <main className="max-w-xl mx-auto min-h-screen bg-white">
       {/* 헤더 */}
-      <header className="p-4 flex items-center gap-4 sticky top-0 bg-white/90 backdrop-blur-sm z-20 border-b border-gray-100">
-        <button onClick={() => router.back()} className="text-gray-600 hover:text-gray-900">
+      <header className="p-4 pl-16 flex items-center gap-4 sticky top-0 bg-white/90 backdrop-blur-sm z-20 border-b border-gray-100">
+        <Link href="/community" className="text-gray-600 hover:text-gray-900">
           <ArrowLeft size={24} />
-        </button>
+        </Link>
         <h1 className="font-bold text-lg truncate flex-1">커뮤니티</h1>
         
         {/* 게시글 관리 버튼 */}
@@ -322,7 +322,7 @@ export default function CommunityDetailPage() {
             댓글 <span className="text-purple-600">{comments.length}</span>
           </h3>
 
-          <div className="space-y-4 mb-6">
+          <div className="space-y-4">
             {comments.map((comment) => (
               <div key={comment.id} className="bg-gray-50 p-4 rounded-lg group relative">
                 <div className="flex justify-between items-start mb-2">
@@ -361,7 +361,7 @@ export default function CommunityDetailPage() {
           </div>
         </section>
 
-        <div className="p-6">
+        <div className="pt-2">
           <form onSubmit={handleCommentSubmit} className="flex flex-col gap-2">
               {!user && (
                   <div className="flex items-center gap-2 px-1">
@@ -374,7 +374,7 @@ export default function CommunityDetailPage() {
                           maxLength={4}
                           className="text-xs border-b border-gray-200 p-1 focus:border-purple-500 outline-none w-24 transition-colors"
                       />
-                      <span className="text-[10px] text-gray-400">익명 댓글 수정/삭제용</span>
+                      <span className="text-[10px] text-gray-400"></span>
                   </div>
               )}
               

@@ -51,7 +51,7 @@ export default function Sidebar() {
           </button>
         </div>
 
-        <div className="p-6 bg-gray-50">
+        <div className="p-4 bg-gray-50">
           {/* 💡 수정: isLoggedIn 대신 user 객체의 존재 여부를 직접 확인 */}
           {user ? (
             <div className="flex items-center gap-3">
@@ -82,7 +82,7 @@ export default function Sidebar() {
           <Link
             href="/"
             onClick={handleLinkClick}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition font-medium ${
+            className={`flex items-center gap-3 px-4 py-2 rounded-xl transition font-medium ${
               pathname === "/" ? "bg-indigo-50 text-indigo-600" : "text-gray-600 hover:bg-gray-50"
             }`}
           >
@@ -93,7 +93,7 @@ export default function Sidebar() {
           <Link
             href="/digging"
             onClick={handleLinkClick}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition font-medium ${
+            className={`flex items-center gap-3 px-4 py-2 rounded-xl transition font-medium ${
               pathname.startsWith("/digging") || pathname.startsWith("/post") 
                 ? "bg-indigo-50 text-indigo-600" 
                 : "text-gray-600 hover:bg-gray-50"
@@ -106,7 +106,7 @@ export default function Sidebar() {
           <Link
             href="/community"
             onClick={handleLinkClick}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition font-medium ${
+            className={`flex items-center gap-3 px-4 py-2 rounded-xl transition font-medium ${
               pathname.startsWith("/community") 
                 ? "bg-indigo-50 text-indigo-600" 
                 : "text-gray-600 hover:bg-gray-50"
@@ -127,7 +127,7 @@ export default function Sidebar() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleLinkClick}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl transition font-medium text-gray-500 hover:bg-gray-50"
+            className="flex items-center gap-3 px-4 py-2 rounded-xl transition font-medium text-gray-500 hover:bg-gray-50"
           >
             <SpotifyLogoIcon className="w-5 h-5 flex-shrink-0 text-gray-400" />
             플레이리스트
@@ -145,7 +145,7 @@ export default function Sidebar() {
                 logout();
                 closeMenu();
               }}
-              className="flex items-center gap-3 px-4 py-3 w-full text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-xl transition font-medium text-sm"
+              className="flex items-center gap-3 px-4 py-2 w-full text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-xl transition font-medium text-sm"
             >
               <LogOut size={20} />
               로그아웃
