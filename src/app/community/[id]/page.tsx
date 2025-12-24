@@ -378,13 +378,13 @@ export default function CommunityDetailPage() {
                   </div>
               )}
               
-              <div className="flex gap-2 w-full">
+              <div className="flex gap-2 w-full max-w-full">
                   <input
                   type="text"
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder={user ? "댓글을 남겨보세요" : "내용을 입력해주세요"}
-                  className="flex-1 bg-gray-100 rounded-full px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500 transition-all text-sm"
+                  className="flex-1 min-w-0 bg-gray-100 rounded-full px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500 transition-all text-sm"
                   />
                   <button 
                   type="submit"
