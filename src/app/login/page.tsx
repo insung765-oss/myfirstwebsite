@@ -31,7 +31,7 @@ export default function LoginPage() {
       const { error: loginError } = await login(name, pin);
 
       if (loginError) {
-        setError(loginError);
+        setError(loginError.message);
         return;
       }
 
