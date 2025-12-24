@@ -1,14 +1,20 @@
 // src/utils/date.ts
-export function formatDate(dateString: string) {
+export function formatDate(dateString: string, formatType: 'short' | 'long' = 'long') {
     const date = new Date(dateString);
-    return date.toLocaleString("ko-KR", {
-      timeZone: "Asia/Seoul", // 👈 한국 시간대 적용
+
+    const options: Intl.DateTimeFormatOptions = {
+      timeZone: "Asia/Seoul",
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit", // 초 단위까지 표시
-      hour12: false,
-    });
+    };
+
+    if (formatType === 'long') {
+      options.hour = "2-digit";
+      options.minute = "2-digit";
+      options.second = "2-digit";
+      options.hour12 = false;
+    }
+
+    return date.toLocaleString("ko-KR", options);
   }

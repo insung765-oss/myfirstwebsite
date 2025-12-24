@@ -1,82 +1,126 @@
-"use client";
+'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { Session, User, AuthError } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 
-interface User {
-  id: string;
-  name: string;
+// --- Start: Logic from signup/page.tsx for consistency ---
+const PIN_SUFFIX = '__pin';
+
+const createEmailFromName = (name: string) => {
+    const encodedName = encodeURIComponent(name);
+    // Use a URL-safe Base64 encoding
+    const base64Name = btoa(encodedName).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+    return `${base64Name}@myapp.com`;
+};
+// --- End: Logic from signup/page.tsx ---
+
+interface AuthUser extends User {
+  user_metadata: {
+    name?: string;
+    [key: string]: any;
+  };
 }
 
+// --- Start: Add login(name, pin) function to Context Type ---
 interface AuthContextType {
-  user: User;
-  login: (name: string, pin: string) => Promise<boolean>;
-  logout: () => void;
+  user: { id: string; name: string; email: string } | null;
+  session: Session | null;
   isLoggedIn: boolean;
+  loading: boolean;
+  login: (name: string, pin: string) => Promise<{ error: AuthError | null }>;
+  logout: () => Promise<void>;
 }
+// --- End: Add login(name, pin) function to Context Type ---
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const anonymousUser: User = { id: "anonymous", name: "익명" };
+interface AuthProviderProps {
+  children: ReactNode;
+}
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User>(anonymousUser);
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<{ id: string; name: string; email: string } | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const isLoggedIn = user.id !== "anonymous";
 
-  // 1. 새로고침 해도 로그인 유지하기 (localStorage 확인)
   useEffect(() => {
-    const savedUser = localStorage.getItem("music_user");
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    } else {
-      setUser(anonymousUser);
-    }
-  }, []);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      const authUser = session?.user as AuthUser | null;
+      const currentUser = authUser ? {
+        id: authUser.id,
+        name: authUser.user_metadata?.name || '사용자',
+        email: authUser.email || ''
+      } : null;
+      setUser(currentUser);
+      setLoading(false);
+    });
 
-  // 2. 로그인 함수
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+      const authUser = session?.user as AuthUser | null;
+      const currentUser = authUser ? {
+        id: authUser.id,
+        name: authUser.user_metadata?.name || '사용자',
+        email: authUser.email || ''
+      } : null;
+      setUser(currentUser);
+      setLoading(false);
+
+      if (event === 'SIGNED_OUT') {
+        router.push('/');
+      }
+    });
+
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
+  }, [router]);
+
+  // --- Start: Correctly implement login(name, pin) ---
   const login = async (name: string, pin: string) => {
-    // DB에서 이름과 핀번호가 일치하는 사람 찾기
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("name", name)
-      .eq("pin", pin)
-      .single();
+    const email = createEmailFromName(name);
+    const securePassword = pin + PIN_SUFFIX;
 
-    if (error || !data) {
-      alert("이름이나 비밀번호가 틀렸어! 다시 확인해봐 🤔");
-      return false;
-    }
-
-    // 로그인 성공!
-    const userData = { id: data.id, name: data.name };
-    setUser(userData);
-    localStorage.setItem("music_user", JSON.stringify(userData)); // 브라우저에 저장
-    return true;
+    const { error } = await supabase.auth.signInWithPassword({ 
+        email: email,
+        password: securePassword
+    });
+    
+    // onAuthStateChange will handle success, we just return the error if it exists.
+    return { error };
   };
+  // --- End: Correctly implement login(name, pin) ---
 
-  // 3. 로그아웃 함수
-  const logout = () => {
-    setUser(anonymousUser); // 익명 유저로 리셋
-    localStorage.removeItem("music_user");
-    router.push("/");
-    router.refresh();
+  const logout = async () => {
+    await supabase.auth.signOut();
   };
+  
+  // --- Start: Provide the new login function ---
+  const value = {
+    session,
+    user,
+    isLoggedIn: !!user,
+    loading,
+    login, // Provide the new login function
+    logout,
+  };
+  // --- End: Provide the new login function ---
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoggedIn }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
-// 편하게 쓰기 위한 커스텀 훅
-export function useAuth() {
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-}
+};

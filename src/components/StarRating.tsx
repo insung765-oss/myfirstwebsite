@@ -4,12 +4,13 @@ import { Star } from "lucide-react";
 import { useState, MouseEvent, TouchEvent } from "react";
 
 interface Props {
+  id?: string;
   rating: number;
   editable?: boolean;
   onChange?: (rating: number) => void;
 }
 
-export default function StarRating({ rating, editable = false, onChange }: Props) {
+export default function StarRating({ id, rating, editable = false, onChange }: Props) {
   const [hover, setHover] = useState(0);
 
   // 별 하나를 렌더링하는 함수
@@ -96,5 +97,5 @@ export default function StarRating({ rating, editable = false, onChange }: Props
     );
   };
 
-  return <div className="flex gap-1">{[1, 2, 3, 4, 5].map((i) => renderStar(i))}</div>;
+  return <div id={id} className="flex gap-1">{[1, 2, 3, 4, 5].map((i) => renderStar(i))}</div>;
 }

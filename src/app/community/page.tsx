@@ -39,7 +39,7 @@ export default async function CommunityPage() {
                   <div className="flex justify-between items-start mb-3">
                     <h2 className="text-lg font-bold text-gray-900 line-clamp-2 flex-1 break-all">{post.title}</h2>
                     <span className="text-xs text-gray-400 whitespace-nowrap ml-4">
-                      {formatDate(post.created_at)}
+                      {formatDate(post.created_at, 'short')}
                     </span>
                   </div>
                   
@@ -66,18 +66,20 @@ export default async function CommunityPage() {
                     <span className="font-bold text-gray-700">{post.user_name}</span>
                     
                     <div className="flex items-center gap-4 text-sm">
-                        {/* 추천 수 (0보다 클 때만 표시) - post.score를 post.upvotes로 수정했습니다. */}
+                        {/* 추천 수 (0보다 클 때만 표시) */}
                         {post.upvotes > 0 && (
                             <div className="flex items-center gap-1.5 text-red-500">
                                 <ThumbsUp size={16} />
                                 <span className="font-semibold">{post.upvotes}</span>
                             </div>
                         )}
-                        {/* 댓글 수 */}
-                        <div className="flex items-center gap-1.5 text-gray-600">
-                            <MessageCircle size={16} />
-                            <span className="font-semibold">{commentCount}</span>
-                        </div>
+                        {/* 댓글 수 (0보다 클 때만 표시) */}
+                        {commentCount > 0 && (
+                            <div className="flex items-center gap-1.5 text-gray-600">
+                                <MessageCircle size={16} />
+                                <span className="font-semibold">{commentCount}</span>
+                            </div>
+                        )}
                     </div>
                   </div>
                 </article>

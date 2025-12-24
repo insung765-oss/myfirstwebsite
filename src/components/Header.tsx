@@ -6,10 +6,9 @@ import { PlusCircle, Music, LogIn, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 export default function Header() {
-  const { user, logout, isLoggedIn } = useAuth();
+  const { user, logout } = useAuth(); // isLoggedIn은 user 객체로 대체 가능하므로 제거
   const pathname = usePathname();
 
-  // 현재 경로에 따라 '글쓰기' 버튼의 링크만 동적으로 변경
   const isCommunity = pathname.startsWith('/community');
   const writeButtonLink = isCommunity ? '/community/write' : '/write';
 
@@ -23,13 +22,14 @@ export default function Header() {
       </Link>
 
       <div className="flex items-center gap-3">
-        {isLoggedIn && (
+        {/* 💡 수정: isLoggedIn 대신 user 객체의 존재 여부를 직접 확인 */}
+        {user && (
           <span className="text-sm font-bold text-gray-600">
+            {/* 이제 user.name 접근은 타입스크립트 관점에서 100% 안전합니다 */}
             안녕, {user.name}!
           </span>
         )}
 
-        {/* 통합된 디자인의 동적 '글쓰기' 버튼 */}
         <Link href={writeButtonLink}>
           <button className="text-white px-3 py-1.5 rounded-full text-sm font-medium flex items-center gap-1 transition bg-gray-900 hover:bg-gray-800">
             <PlusCircle size={14} />
@@ -37,8 +37,8 @@ export default function Header() {
           </button>
         </Link>
 
-        {/* 로그인/로그아웃 버튼 */}
-        {isLoggedIn ? (
+        {/* 💡 수정: isLoggedIn 대신 user 객체의 존재 여부를 직접 확인 */}
+        {user ? (
           <button
             onClick={logout}
             className="text-gray-400 hover:text-red-500 transition p-1"

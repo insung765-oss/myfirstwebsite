@@ -10,7 +10,7 @@ import { SpotifyLogoIcon } from "@/components/icons/SpotifyLogoIcon";
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const { user, logout, isLoggedIn } = useAuth();
+  const { user, logout } = useAuth(); // isLoggedIn은 user 객체로 대체 가능하므로 제거
 
   const closeMenu = () => setIsOpen(false);
 
@@ -52,13 +52,15 @@ export default function Sidebar() {
         </div>
 
         <div className="p-6 bg-gray-50">
-          {isLoggedIn ? (
+          {/* 💡 수정: isLoggedIn 대신 user 객체의 존재 여부를 직접 확인 */}
+          {user ? (
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600">
                 <User size={20} />
               </div>
               <div>
                 <p className="text-xs text-gray-500 font-bold">반가워요!</p>
+                {/* 이제 user.name 접근은 타입스크립트 관점에서 100% 안전합니다 */}
                 <p className="text-sm font-bold text-gray-900">{user.name}님</p>
               </div>
             </div>
@@ -136,7 +138,8 @@ export default function Sidebar() {
         </nav>
 
         <div className="absolute bottom-0 left-0 w-full p-4 border-t border-gray-100">
-        {isLoggedIn && (
+        {/* 💡 수정: isLoggedIn 대신 user 객체의 존재 여부를 직접 확인 */}
+        {user && (
             <button
               onClick={() => {
                 logout();
