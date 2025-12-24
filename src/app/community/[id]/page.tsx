@@ -285,7 +285,7 @@ export default function CommunityDetailPage() {
         )}
       </header>
 
-      <div className="p-6">
+      <div className="p-4">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">{post.title}</h1>
         <div className="flex justify-between items-center text-sm text-gray-500 mb-6 border-b border-gray-100 pb-4">
           <span className={`font-bold ${post.user_id ? 'text-blue-600' : 'text-gray-700'}`}>

@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 p-4 flex justify-between items-center z-20 h-16">
-      <Link href="/" className="flex items-center gap-2 pl-10">
+      <Link href="/" className="flex items-center gap-2 pl-2">
         <Music className="text-indigo-600" />
         <h1 className="font-bold text-lg text-gray-800 tracking-tight">
           모모22

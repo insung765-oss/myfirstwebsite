@@ -75,7 +75,7 @@ export default function SignUpPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="bg-white w-full max-w-sm p-8 rounded-2xl shadow-lg border border-gray-100">
-        <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">회원가입</h1>
+        <h1 className="text-2xl font-bold text-center mb-2 text-gray-800">회원가입 🔐</h1>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
